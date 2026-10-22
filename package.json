@@ -1,0 +1,38 @@
+{
+  "name": "mcp-config-lint",
+  "version": "0.1.0",
+  "description": "Lint MCP client configs (.mcp.json, Cursor, VS Code, Claude Desktop) for plaintext secrets, unpinned packages and broken commands",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "mcp-config-lint": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc && node --test dist/*.test.js",
+    "prepare": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zafmy/mcp-config-lint.git"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "lint",
+    "security",
+    "supply-chain",
+    "ai-agents",
+    "claude-code"
+  ],
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2"
+  }
+}
