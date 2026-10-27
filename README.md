@@ -1,3 +1,5 @@
+![mcp-config-lint — Check your MCP configs before your agent runs them.](docs/assets/banner.png)
+
 # mcp-config-lint
 
 [![CI](https://github.com/zafmy/mcp-config-lint/actions/workflows/ci.yml/badge.svg)](https://github.com/zafmy/mcp-config-lint/actions/workflows/ci.yml)
