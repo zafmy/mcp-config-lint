@@ -46,7 +46,7 @@ Exit codes: `0` no errors, `1` an error (or a warning with `--strict`), `2` bad 
 | `unpinned` | warning | `npx`, `bunx`, `pnpm dlx`, `yarn dlx`, `npm exec`, `uvx` or `pipx run` fetching a package with no exact version (`pkg`, `pkg@latest`, `pkg@^1`, `pkg>=1`), or a git source with no ref. Whoever controls that package controls your agent's tools on the next start |
 | `command-not-found` | warning | The command isn't on this machine's `PATH`, or the absolute path doesn't exist |
 | `command-has-args` | warning | `"command": "npx some-mcp"` with the arguments packed into one string. It is still checked for secrets and pinning |
-| `insecure-url` | warning | A remote server reached over `http://` to anything other than localhost |
+| `insecure-url` | warning | A remote server reached over `http://` to anything other than a loopback host (`localhost`, `*.localhost`, `127.x.x.x`, `[::1]`) |
 | `duplicate-name` | warning | The same server name twice for one client, for example in both `.mcp.json` and `~/.claude.json`, where one silently hides the other. The same name in two different apps is fine |
 | `invalid-server` | error | An entry with neither `command` nor `url`, non-string `args`, or a malformed URL |
 | `invalid-json` / `no-servers` | error | A file that isn't valid JSON, or has no `mcpServers`/`servers` object. It reports the line and column only, never the text around the error |
