@@ -1,10 +1,8 @@
-![mcp-config-lint — Check your MCP configs before your agent runs them.](docs/assets/banner.png)
+![mcp-config-lint flags a pasted token, unpinned packages and a plain-http server, then passes once the config is fixed](docs/cover.png)
 
 # mcp-config-lint
 
 [![CI](https://github.com/zafmy/mcp-config-lint/actions/workflows/ci.yml/badge.svg)](https://github.com/zafmy/mcp-config-lint/actions/workflows/ci.yml)
-
-![mcp-config-lint flags a pasted token, unpinned packages and a plain-http server, then passes once the config is fixed](docs/cover.png)
 
 Check your MCP client configs before your agent runs them. It finds tokens pasted into `.mcp.json`, servers that pull an unpinned package from npm or PyPI on every start, commands that won't start, and remote servers on plain http.
 
