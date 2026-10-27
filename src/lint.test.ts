@@ -96,8 +96,13 @@ test('missing commands, missing command/url, and plain http to a remote host are
     notObj: 'npx foo',
     http: { url: 'http://mcp.example.com/sse' },
     local: { url: 'http://localhost:3000/mcp' },
+    loop2: { url: 'http://127.0.0.2:3000/mcp' },
+    subLocal: { url: 'http://app.localhost/mcp' },
+    v6: { url: 'http://[::1]:8080/mcp' },
+    notLoop: { url: 'http://127.example.com/mcp' },
+    fakeLocal: { url: 'http://localhost.evil.com/mcp' },
   });
-  assert.deepEqual(rules(r.findings), ['gone:command-not-found', 'abs:command-not-found', 'empty:invalid-server', 'notObj:invalid-server', 'http:insecure-url']);
+  assert.deepEqual(rules(r.findings), ['gone:command-not-found', 'abs:command-not-found', 'empty:invalid-server', 'notObj:invalid-server', 'http:insecure-url', 'notLoop:insecure-url', 'fakeLocal:insecure-url']);
 });
 
 test('broken files and missing server maps are errors; VS Code "servers" key and JSONC are supported', () => {

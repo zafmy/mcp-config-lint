@@ -146,6 +146,10 @@ function commandIssues(command: string, args: string[], resolve: Resolve): Issue
   return issues;
 }
 
+// localhost, any *.localhost name, 127.0.0.0/8 and ::1 never leave the machine (RFC 6761, RFC 1122).
+const isLoopback = (host: string) =>
+  host === 'localhost' || host.endsWith('.localhost') || host === '[::1]' || /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host);
+
 function urlIssues(url: string): Issue[] {
   let u: URL;
   try {
@@ -156,7 +160,7 @@ function urlIssues(url: string): Issue[] {
   const issues: Issue[] = [];
   for (const [k, v] of u.searchParams) if (secretPair(k, v)) issues.push(secret(`url parameter ${k}`));
   if (u.username || u.password) issues.push(secret('url credentials'));
-  if (u.protocol === 'http:' && !['localhost', '127.0.0.1', '[::1]'].includes(u.hostname)) {
+  if (u.protocol === 'http:' && !isLoopback(u.hostname)) {
     issues.push(warn('insecure-url', `${u.host} is reached over plain http, so requests and any auth headers travel unencrypted; use https`));
   }
   return issues;
