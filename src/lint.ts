@@ -129,7 +129,12 @@ export function packagePinProblem(eco: Ecosystem, spec: string): string | undefi
     const version = spec.slice(at + 1);
     return EXACT_SEMVER.test(version) ? undefined : `"${spec}" uses "${version}", which can change; pin an exact version like @1.2.3`;
   }
-  if (/^[\w.-]+(?:\[[^\]]*\])?(?:==|@)[\w.!+-]+$/.test(spec)) return undefined;
+  const exact = /^([\w.-]+)(?:\[[^\]]*\])?(==|@)([\w.!+-]+)$/.exec(spec);
+  // PEP 440 versions start with a digit (an optional v is normalised away); anything else, like uvx's @latest, is a moving tag.
+  if (exact) {
+    const [, name, op, version] = exact;
+    return /^v?\d/i.test(version) ? undefined : `"${spec}" uses "${version}", which can change; pin an exact version like ${op === '@' ? `${name}@` : '=='}1.2.3`;
+  }
   if (/[<>=!~]/.test(spec)) return `"${spec}" allows a range; pin an exact version like ==1.2.3`;
   return `"${spec}" has no version, so every start can run a new release; pin it like ${spec}==1.2.3`;
 }
