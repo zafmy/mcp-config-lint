@@ -56,7 +56,7 @@ Whether `${VAR}` gets expanded depends on the client. Claude Code expands `${VAR
 ## In CI
 
 ```yaml
-- run: npx -y github:zafmy/mcp-config-lint#v0.1.1 --strict --ignore command-not-found
+- run: npx -y github:zafmy/mcp-config-lint#v0.1.2 --strict --ignore command-not-found
 ```
 
 Skip `command-not-found` in CI, because the runner won't have the tools your editor uses. Pin a release tag or commit, for the same reason this tool exists.
