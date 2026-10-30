@@ -1,6 +1,6 @@
 {
   "name": "mcp-config-lint",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Lint MCP client configs (.mcp.json, Cursor, VS Code, Claude Desktop) for plaintext secrets, unpinned packages and broken commands",
   "license": "MIT",
   "type": "module",
