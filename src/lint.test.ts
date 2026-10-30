@@ -71,6 +71,12 @@ test('packagePinProblem accepts exact versions and git refs, rejects tags and ra
     assert.equal(packagePinProblem('python', ok), undefined, ok);
   assert.match(packagePinProblem('python', 'mcp-server-fetch')!, /no version/);
   assert.match(packagePinProblem('python', 'mcp-server-fetch>=1.0')!, />=1\.0/);
+  // uvx accepts @latest; a word after @ or == is not a version (PEP 440 versions start with a digit).
+  for (const tag of ['mcp-server-fetch@latest', 'mcp-server-fetch@dev', 'mcp-server-fetch==latest'])
+    assert.match(packagePinProblem('python', tag)!, /can change/, tag);
+  assert.match(packagePinProblem('python', 'pkg@latest')!, /like pkg@1\.2\.3/);
+  for (const ok of ['mcp-server-fetch[cli]==1.2.3', 'pkg==1!2.0', 'pkg==1.0.post1', 'pkg==v1.2.3', 'pkg@V1.0'])
+    assert.equal(packagePinProblem('python', ok), undefined, ok);
 });
 
 test('package runners are checked for unpinned packages, wherever the package sits in args', () => {
