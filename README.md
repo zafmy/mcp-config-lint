@@ -1,4 +1,4 @@
-![mcp-config-lint flags a pasted token, unpinned packages and a plain-http server, then passes once the config is fixed](docs/cover.png)
+![mcp-config-lint: check configs before your agent runs. Catch secrets, pin packages, fix commands.](docs/cover.png)
 
 # mcp-config-lint
 
@@ -18,6 +18,8 @@ $ npx -y github:zafmy/mcp-config-lint
   warn  notes: mcp.example.com is reached over plain http, so requests and any auth headers travel unencrypted; use https [insecure-url]
 1 file(s), 3 server(s): 1 error(s), 4 warning(s)
 ```
+
+![Before: mcp-config-lint flags a pasted token, unpinned packages and a plain-http server. After: the fixed config passes with --strict](docs/screenshot.png)
 
 ## Use
 
