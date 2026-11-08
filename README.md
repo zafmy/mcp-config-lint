@@ -1,4 +1,4 @@
-![mcp-config-lint: check configs before your agent runs. Catch secrets, pin packages, fix commands.](docs/cover.png)
+![mcp-config-lint: check configs before your agent runs. Catch secrets, pin packages, fix commands.](docs/banner.png)
 
 # mcp-config-lint
 
