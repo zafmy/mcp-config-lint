@@ -124,6 +124,24 @@ test('broken files and missing server maps are errors; VS Code "servers" key and
   assert.equal(r.servers, 1);
 });
 
+test('~/.claude.json: per-project servers under "projects" are linted too', () => {
+  // `claude mcp add` (local scope, the default) writes here, not to the top-level mcpServers.
+  const text = JSON.stringify({
+    mcpServers: { top: { command: 'node', args: ['a.js'] } },
+    projects: {
+      '/Users/me/app': { mcpServers: { gh: { command: 'node', args: ['s.js'], env: { GITHUB_TOKEN: GH } } } },
+      '/Users/me/other': { mcpServers: { gh: { command: 'node', args: ['s.js'] } } },
+      '/Users/me/empty': { allowedTools: [] },
+    },
+  });
+  const r = lintFiles([{ file: '~/.claude.json', text, optional: true }], onPath);
+  assert.deepEqual(rules(r.findings), ['gh (/Users/me/app):secret']);
+  assert.equal(r.servers, 3);
+  // Only projects, no top-level servers: still linted.
+  const only = lintFiles([{ file: '~/.claude.json', text: JSON.stringify({ projects: { '/a': { mcpServers: { x: { command: 'node', args: ['s.js'], env: { API_KEY: GH } } } } } }), optional: true }], onPath);
+  assert.deepEqual(rules(only.findings), ['x (/a):secret']);
+});
+
 test('the same server name twice for one client is a warning; across different clients it is fine', () => {
   const s = JSON.stringify({ mcpServers: { github: { command: 'node', args: ['a.js'] } } });
   const r = lintFiles([

@@ -206,8 +206,23 @@ function serverMap(f: ConfigFile): { servers: Record<string, unknown> } | { find
   }
   // Claude Code, Claude Desktop and Cursor use "mcpServers"; VS Code uses "servers".
   const servers = isObject(data) ? (data.mcpServers ?? data.servers) : undefined;
-  if (servers === undefined) return f.optional ? { servers: {} } : at('no-servers', 'no "mcpServers" or "servers" object');
-  return isObject(servers) ? { servers } : at('no-servers', 'the server list must be an object keyed by server name');
+  const local = projectServers(data);
+  if (servers === undefined) {
+    if (Object.keys(local).length) return { servers: local };
+    return f.optional ? { servers: {} } : at('no-servers', 'no "mcpServers" or "servers" object');
+  }
+  return isObject(servers) ? { servers: { ...servers, ...local } } : at('no-servers', 'the server list must be an object keyed by server name');
+}
+
+// ~/.claude.json keeps local-scope servers (the `claude mcp add` default) per project folder,
+// under projects["<path>"].mcpServers. Name them "<server> (<path>)" so they stay apart.
+function projectServers(data: unknown): Record<string, unknown> {
+  if (!isObject(data) || !isObject(data.projects)) return {};
+  return Object.fromEntries(
+    Object.entries(data.projects).flatMap(([path, p]) =>
+      isObject(p) && isObject(p.mcpServers) ? Object.entries(p.mcpServers).map(([name, s]) => [`${name} (${path})`, s]) : [],
+    ),
+  );
 }
 
 // Which app reads a config file. The same server name in two apps is normal; within one app, one entry hides the other.
