@@ -27,7 +27,7 @@ npx -y github:zafmy/mcp-config-lint --user     # plus your user-level configs
 npx -y github:zafmy/mcp-config-lint path/to/mcp.json
 ```
 
-With no files it lints the project configs in the current folder: `.mcp.json` (Claude Code), `.cursor/mcp.json` (Cursor) and `.vscode/mcp.json` (VS Code). `--user` adds `~/.claude.json`, the Claude Desktop config and `~/.cursor/mcp.json`. Comments in the JSON are fine, since VS Code allows them.
+With no files it lints the project configs in the current folder: `.mcp.json` (Claude Code), `.cursor/mcp.json` (Cursor) and `.vscode/mcp.json` (VS Code). `--user` adds `~/.claude.json`, the Claude Desktop config and `~/.cursor/mcp.json`. In `~/.claude.json` that includes the per-project servers that `claude mcp add` writes under `projects` by default; they are reported as `<server> (<project path>)`. Comments in the JSON are fine, since VS Code allows them.
 
 | Option | What it does |
 |---|---|
