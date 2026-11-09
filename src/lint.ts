@@ -155,12 +155,17 @@ function commandIssues(command: string, args: string[], resolve: Resolve): Issue
 const isLoopback = (host: string) =>
   host === 'localhost' || host.endsWith('.localhost') || host === '[::1]' || /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host);
 
+// Claude Code expands ${VAR} and ${VAR:-default} in "url"; VS Code uses ${env:VAR} and ${input:id}.
+// Use the default when there is one, otherwise a placeholder ("xxx" is never read as a secret).
+const expandVars = (url: string) => url.replace(/\$\{[^}:]*:-([^}]*)\}/g, '$1').replace(/\$\{[^}]*\}/g, 'xxx');
+
 function urlIssues(url: string): Issue[] {
   let u: URL;
   try {
-    u = new URL(url);
+    u = new URL(expandVars(url));
   } catch {
-    return [err('invalid-server', `"url" is not a valid URL`)];
+    // "${MCP_URL}" alone is only known at runtime, so there is nothing to check.
+    return url.includes('${') ? [] : [err('invalid-server', `"url" is not a valid URL`)];
   }
   const issues: Issue[] = [];
   for (const [k, v] of u.searchParams) if (secretPair(k, v)) issues.push(secret(`url parameter ${k}`));
