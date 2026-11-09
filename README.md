@@ -50,7 +50,7 @@ Exit codes: `0` no errors, `1` an error (or a warning with `--strict`), `2` bad 
 | `command-has-args` | warning | `"command": "npx some-mcp"` with the arguments packed into one string. It is still checked for secrets and pinning |
 | `insecure-url` | warning | A remote server reached over `http://` to anything other than a loopback host (`localhost`, `*.localhost`, `127.x.x.x`, `[::1]`) |
 | `duplicate-name` | warning | The same server name twice for one client, for example in both `.mcp.json` and `~/.claude.json`, where one silently hides the other. The same name in two different apps is fine |
-| `invalid-server` | error | An entry with neither `command` nor `url`, non-string `args`, or a malformed URL |
+| `invalid-server` | error | An entry with neither `command` nor `url`, non-string `args`, or a malformed URL (`${VAR}`, `${VAR:-default}` and `${env:VAR}` in `url` are allowed; a default is checked like any URL) |
 | `invalid-json` / `no-servers` | error | A file that isn't valid JSON, or has no `mcpServers`/`servers` object. It reports the line and column only, never the text around the error |
 
 Whether `${VAR}` gets expanded depends on the client. Claude Code expands `${VAR}` in `.mcp.json`, and VS Code supports `${env:VAR}` and `${input:...}`. If your client doesn't expand variables, start the server from a small wrapper script that reads the secret from your OS keychain.

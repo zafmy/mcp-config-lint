@@ -111,6 +111,19 @@ test('missing commands, missing command/url, and plain http to a remote host are
   assert.deepEqual(rules(r.findings), ['gone:command-not-found', 'abs:command-not-found', 'empty:invalid-server', 'notObj:invalid-server', 'http:insecure-url', 'notLoop:insecure-url', 'fakeLocal:insecure-url']);
 });
 
+test('variables in "url" (${VAR}, ${VAR:-default}, ${env:VAR}) are not malformed URLs; defaults are still checked', () => {
+  const r = lint({
+    whole: { type: 'http', url: '${MCP_URL}' },
+    base: { type: 'http', url: '${API_BASE_URL:-https://api.example.com}/mcp' },
+    host: { type: 'http', url: 'https://${MCP_HOST}/mcp?api_key=${MCP_API_KEY}' },
+    vscode: { type: 'http', url: 'https://${env:MCP_HOST}:8443/mcp' },
+    httpDefault: { type: 'http', url: '${API_BASE_URL:-http://api.example.com}/mcp' },
+    leak: { type: 'http', url: 'https://${MCP_HOST}/mcp?token=' + GH },
+    broken: { type: 'http', url: 'not a url' },
+  });
+  assert.deepEqual(rules(r.findings), ['httpDefault:insecure-url', 'leak:secret', 'broken:invalid-server']);
+});
+
 test('broken files and missing server maps are errors; VS Code "servers" key and JSONC are supported', () => {
   const r = lintFiles([
     { file: 'bad.json', text: `{ "mcpServers": { "a": { "env": { "K": "${GH}" ` },
